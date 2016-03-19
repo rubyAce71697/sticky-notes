@@ -95,6 +95,8 @@ class Revealer_Glade:
         self.close_label = self.builder.get_object("close")
         self.textbuffer = self.textview.get_buffer()
 
+        self.title = ""
+
         language_manager = GtkSource.LanguageManager()
 
         #logger.debug(language_manager.get_available_languages())
@@ -145,7 +147,7 @@ class Revealer_Glade:
         logger.debug(text)
         self.textbuffer.delete(startiter,enditer)
 
-        regex = re.compile(r"(([0-9a-zA-Z]+://\S+?\.\S+)|(www\.\S+?\.\S+))")
+        regex = re.compile(r"(([0-9a-zA-Z]+://\S+)|(www\.\S+))")
         word_list = []
 
 
@@ -322,7 +324,7 @@ class Revealer_Glade:
         menu.append(change_title)
         change_title.show()
 
-        #change_title.connect("activate",self.change_note_title)
+        change_title.connect("activate",self.change_note_title)
 
 
 
@@ -360,31 +362,31 @@ class Revealer_Glade:
         Display a dialog with a text entry.
         Returns the text, or None if canceled.
         """
-        d = Gtk.MessageDialog(parent,
-                              Gtk.DIALOG_MODAL | Gtk.DIALOG_DESTROY_WITH_PARENT,
-                              Gtk.MESSAGE_QUESTION,
-                              Gtk.BUTTONS_OK_CANCEL,
-                              message)
+        dialog = Gtk.MessageDialog(self.window, 0, Gtk.MessageType.INFO,
+            Gtk.ButtonsType.OK, "Enter the Title")
+        dialog.add_button("CANCEL",Gtk.ButtonsType.CANCEL)
+
         entry = Gtk.Entry()
         entry.set_text(default)
         entry.show()
-        d.vbox.pack_end(entry)
-        entry.connect('activate', lambda _: d.response(Gtk.RESPONSE_OK))
-        d.set_default_response(Gtk.RESPONSE_OK)
+        box = dialog.get_content_area()
+        box.add(entry)
 
-        r = d.run()
+        entry.connect('activate', lambda _: dialog.response(Gtk.ResponseType.OK))
+        dialog.set_default_response(Gtk.ResponseType.OK)
+
+        r = dialog.run()
         text = entry.get_text().decode('utf8')
-        d.destroy()
-        if r == Gtk.RESPONSE_OK:
+        dialog.destroy()
+        if r == Gtk.ResponseType.OK:
             return text
         else:
             return None
     def change_note_title(self,widget):
         text = self.get_text(self.window,"Enter tht Title. ")
-        if text:
-            logger.debug(text)
-        else:
-            logger.debug("No title entered")
+        self.title = text
+        self.label.set_text(text)
+        logger.debug(text)
 
 
 
@@ -426,7 +428,10 @@ class Revealer_Glade:
                 logger.debug("Info about note hiding text view")
                 logger.debug(no_of_lines)
                 logger.debug(no_of_chars)
-                self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
+
+                if self.title is None:
+                    self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
+
                 logger.debug(self.label.get_text())
                 print [self.label.get_text()]
                 print "contracted"
@@ -435,7 +440,10 @@ class Revealer_Glade:
             else:
                 self.revealer.show()
                 logger.info("revealing text view")
-                self.label.set_text("")
+
+                if self.title is None:
+                    self.label.set_text("")
+
                 self.revealer.set_reveal_child(True)
                 self.close_label.show()
                 self.toogle_label.show()
