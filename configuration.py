@@ -26,6 +26,10 @@ class Configurations:
 
 		else:
 			preferences = {}
+			preferences["reveal"] = self.config.getboolean(str(uid),'reveal')
+			preferences['title'] = self.config.get(str(uid),'title')
+			preferences['x'] = self.config.getint(str(uid),'x')
+			preferences['y'] = self.config.getint(str(uid), 'y')
 			preferences["height"] = self.config.getint(str(uid),'height')
 			preferences["width"] = self.config.getint(str(uid),'width')
 			preferences['color'] = {}
@@ -53,6 +57,10 @@ class Configurations:
 
 			self.config.set(str(uid),"height",preferences['height'])
 			self.config.set(str(uid),"width",preferences['width'])
+			self.config.set(str(uid),'reveal',preferences['reveal'])
+			self.config.set(str(uid),'title',preferences['title'])
+			self.config.set(str(uid),'x',preferences['x'])
+			self.config.set(str(uid),'y', preferences['y'])
 			self.config.set(str(uid),"red",preferences['color']['red'])
 			self.config.set(str(uid),"green",preferences['color']['green'])
 			self.config.set(str(uid),"blue",preferences['color']['blue'])

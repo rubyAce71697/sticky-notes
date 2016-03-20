@@ -35,7 +35,7 @@ home = expanduser("~")
 class Revealer_Glade:
 
     no_of_notes = 0
-
+    notes_list = []
     def __init__(self,widget, path = None):
 
 
@@ -53,6 +53,9 @@ class Revealer_Glade:
             "on_textview2_motion_notify_event":self.on_textview2_motion_notify_event
         }
 
+
+        Revealer_Glade.notes_list.append(self)
+        logger.debug(Revealer_Glade.notes_list)
         self.config = Configurations()
 
         self.configuration = ""
@@ -98,7 +101,6 @@ class Revealer_Glade:
         self.title = ""
 
         language_manager = GtkSource.LanguageManager()
-
         #logger.debug(language_manager.get_available_languages())
         self.textbuffer.set_language(language_manager.get_language('markdown'))
         self.textbuffer.set_language(language_manager.get_language('url'))
@@ -116,8 +118,17 @@ class Revealer_Glade:
 
         if  self.configuration:
             self.bg_color = Gdk.Color(self.configuration['color']['red'], self.configuration['color']['green'], self.configuration['color']['blue'])
+            self.title = self.configuration['title']
+            self.label.set_text(self.title)
+            self.window.move(self.configuration['x'],self.configuration['y'])
+            self.revealer.set_reveal_child(self.configuration['reveal'])
+
         else:
             self.bg_color = Gdk.Color(red=60909, green=54484, blue=0)
+            self.title = ""
+            self.label.set_text("")
+
+
 
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
@@ -192,8 +203,6 @@ class Revealer_Glade:
 
 
     def hyperlink_clicked(self,tag,textview,event,iter):
-        print
-        print "------------------------------------------------------"
 
         if event.type == Gdk.EventType.BUTTON_PRESS:
             logger.debug("Link Left clicked")
@@ -202,6 +211,12 @@ class Revealer_Glade:
             logger.debug(event)
             logger.debug(iter)
             url = tag.url
+
+            #menu = Gtk.Menu()
+            #opn_in_browser = Gtk.MenuItem("Open in Web Browser")
+
+
+
             regex = re.compile(r"([0-9a-zA-Z]+://.*)")
             match = regex.search(url)
 
@@ -429,11 +444,15 @@ class Revealer_Glade:
                 logger.debug(no_of_lines)
                 logger.debug(no_of_chars)
 
-                if self.title is None:
+                logger.debug("---------------------------------------------------------------------------------------")
+                logger.debug(self.title)
+
+                if self.title == "":
+                    logger.debug("checking title")
                     self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
 
                 logger.debug(self.label.get_text())
-                print [self.label.get_text()]
+                print self.label.get_text()
                 print "contracted"
                 self.close_label.hide()
                 self.toogle_label.hide()
@@ -441,7 +460,7 @@ class Revealer_Glade:
                 self.revealer.show()
                 logger.info("revealing text view")
 
-                if self.title is None:
+                if self.title == "":
                     self.label.set_text("")
 
                 self.revealer.set_reveal_child(True)
@@ -507,8 +526,10 @@ class Revealer_Glade:
 
         preferences = {}
         preferences['color'] = {}
-        preferences['height'] = self.window.get_size()[1]
-        preferences['width'] = self.window.get_size()[0]
+        preferences['height'],preferences['width'] = self.window.get_size()
+        preferences['x'],preferences['y'] = self.window.get_position()
+        preferences['reveal'] = self.revealer.get_reveal_child()
+        preferences['title'] = self.title
         preferences['color']['red'] = self.bg_color.red
         preferences['color']['green'] = self.bg_color.green
         preferences['color']['blue'] = self.bg_color.blue
@@ -586,6 +607,14 @@ def about_stickies(widget):
     dialog.destroy()
 
 
+def quit_application(widget):
+    for note in Revealer_Glade.notes_list:
+        note.save_sticky()
+
+
+    Gtk.main_quit()
+
+
 class Application_Menu:
 
     def __init__(self):
@@ -612,7 +641,7 @@ class Application_Menu:
         about_item = Gtk.MenuItem("About")
         about_item.connect("activate",about_stickies)
         quit_item = Gtk.MenuItem("Quit")
-        quit_item.connect("activate",Gtk.main_quit)
+        quit_item.connect("activate",quit_application)
         menu.append(add_item)
         menu.append(show_item)
         menu.append(about_item)
