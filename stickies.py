@@ -176,7 +176,9 @@ class Revealer_Glade:
                     tag = self.textbuffer.create_tag(None)
                     tag.props.underline = Pango.Underline.SINGLE
                     tag.props.foreground = "#0000FF"
+                    #tag.add_events(Gdk.BUTTON_PRESS_MASK)
                     tag.connect("event",self.hyperlink_clicked)
+
                     tag.url = word[start:end]
                     self.textbuffer.insert_with_tags(self.textbuffer.get_end_iter(),word[start:end],tag)
                     self.textbuffer.insert(self.textbuffer.get_end_iter(),word[end:])
@@ -203,20 +205,19 @@ class Revealer_Glade:
 
 
     def hyperlink_clicked(self,tag,textview,event,iter):
+        #tag.handler_block_by_func(self.hyperlink_clicked)
+        print "---------------------------------------------------------------------------"
+        #print event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
+        print event.type
+        print event.type == Gdk.EventType.BUTTON_RELEASE and event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
 
-        if event.type == Gdk.EventType.BUTTON_PRESS:
+        if event.type == Gdk.EventType.BUTTON_RELEASE and event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK  :
             logger.debug("Link Left clicked")
             logger.debug(tag.url)
             logger.debug(iter.get_line())
             logger.debug(event)
             logger.debug(iter)
             url = tag.url
-
-            #menu = Gtk.Menu()
-            #opn_in_browser = Gtk.MenuItem("Open in Web Browser")
-
-
-
             regex = re.compile(r"([0-9a-zA-Z]+://.*)")
             match = regex.search(url)
 
@@ -227,7 +228,24 @@ class Revealer_Glade:
 
             webbrowser.open(url,new = 2,autoraise = 2)
 
-        logger.debug(event.type)
+           
+    def open_in_browser_activated(self,widget,url,tag):
+
+        regex = re.compile(r"([0-9a-zA-Z]+://.*)")
+        match = regex.search(url)
+
+        if not match:
+            logger.debug("url found")
+            url = "https://" + url
+
+
+        webbrowser.open(url,new = 2,autoraise = 2)
+        tag.handler_unblock_by_func(self.hyperlink_clicked)
+    def copy_link_activated(self,widget,url,tag):
+        tag.handler_unblock_by_func(self.hyperlink_clicked)
+        pass
+
+
 
 
 

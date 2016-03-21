@@ -1,0 +1,6 @@
+*.txt
+*.pyc
+*.cfg~
+*.glade~
+notes
+*.py~
