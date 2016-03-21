@@ -8,7 +8,7 @@ Stick your notes to your desktop
 Features
 ==========
 * Markdown Support
-* Links support
+* Links support (ctrl + left click opens link in default browser)
 * Collapse/ Expand your notes 
 
 
