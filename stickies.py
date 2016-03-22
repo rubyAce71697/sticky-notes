@@ -12,6 +12,8 @@ from os.path import expanduser
 import glob
 import os
 
+
+
 """ configuration for storing the settings like color, position for ch note according to the uuid """
 import ConfigParser
 
@@ -103,7 +105,7 @@ class Revealer_Glade:
         language_manager = GtkSource.LanguageManager()
         #logger.debug(language_manager.get_available_languages())
         self.textbuffer.set_language(language_manager.get_language('markdown'))
-        self.textbuffer.set_language(language_manager.get_language('url'))
+
 
         self.textbuffer.set_text(note_string)
         self.text_changed(None)
@@ -500,7 +502,7 @@ class Revealer_Glade:
         window = widget.get_window(Gtk.TextWindowType.TEXT)
         for tag in widget.get_iter_at_location(x, y).get_tags():
             logger.debug(" in loop tag = " + tag.url)
-            if hasattr(tag, "url"):
+            if hasattr(tag, "url") and event.get_state() == Gdk.ModifierType.CONTROL_MASK:
                 logger.debug(" Cordinates have tag url")
                 window.set_cursor(Gdk.Cursor(cursor_type=Gdk.CursorType.HAND2))
                 return False # to not call the default handler.
@@ -535,7 +537,18 @@ class Revealer_Glade:
 
 
         self.save_sticky()
-        self.window.close()
+        dialog = Gtk.MessageDialog(self.window, 0, Gtk.MessageType.QUESTION,
+            Gtk.ButtonsType.YES_NO, "Do you want to DELETE sticky or not")
+
+        response = dialog.run()
+        dialog.destroy()
+        if response == Gtk.ResponseType.YES:
+            os.remove(self.path)
+            self.window.close()
+            Revealer_Glade.notes_list.remove(self)
+
+        self.window.hide()
+
 
     def save_sticky(self):
 
@@ -602,7 +615,8 @@ def initialize_notes(menu):
     else:
         create_note(menu,None)
     logger.info("Starting Gtk loop")
-    Gtk.main()
+    if menu is not None:
+        Gtk.main()
 
 
 
@@ -615,8 +629,8 @@ def about_stickies(widget):
     dialog.set_program_name("Stickies")
     dialog.add_credit_section("Authors:", ['Nishant Kukreja (github.com/rubyace71697)'])
     dialog.set_license_type(Gtk.License.GPL_3_0)
-    dialog.set_website("website to be added")
-    dialog.set_website_label("Site not available")
+    dialog.set_website("https://github.com/rubyAce71697/sticky-notes")
+    dialog.set_website_label("Github Page")
     dialog.set_comments("Utility for ubuntu (inspired from stickies for mac)")
     dialog.set_logo_icon_name(os.path.dirname(os.path.abspath(__file__)) +"/stickies.png")
     print os.path.dirname(os.path.abspath(__file__)) + "/stickies.png"
@@ -653,6 +667,16 @@ class Application_Menu:
         show_item.set_submenu(note_items)
 
 
+        show_notes = Gtk.MenuItem("Show All")
+
+        show_notes.connect("activate",self.show_all_notes)
+        menu.append(show_notes)
+        show_notes.show()
+
+        hide_notes = Gtk.MenuItem("Hide All")
+        hide_notes.connect("activate",self.hide_all_notes)
+        menu.append(hide_notes)
+        hide_notes.show()
 
 
 
@@ -674,6 +698,24 @@ class Application_Menu:
 
         initialize_notes(add_item)
 
+    def show_all_notes(self,widget):
+
+        if not Revealer_Glade.notes_list:
+            initialize_notes(None)
+        else:
+            for i in Revealer_Glade.notes_list:
+                i.window.show()
+                i.window.set_keep_above(True)
+                i.window.set_keep_above(False)
+
+    def hide_all_notes(selfself,widget):
+
+
+        for i in Revealer_Glade.notes_list:
+            i.save_sticky()
+            i.window.close()
+
+        Revealer_Glade.notes_list = []
 if __name__ == "__main__":
 
     #initialize_notes(None)
