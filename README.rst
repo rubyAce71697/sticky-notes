@@ -5,7 +5,6 @@ Sticky Notes for Ubuntu
 Stick your notes to your desktop
 
 
-
 Features
 ==========
 * Markdown Support
@@ -13,8 +12,7 @@ Features
 * Collapse/ Expand your notes 
 *Delete/ Hide individual notes
 *Hide All/ Show All notes at once
-*Set the title of match 
-(default title: first 40 characters of note - shown when note is collapsed)
+*Set the title of match (default title: first 40 characters of note - shown when note is collapsed)
 *Change color of notes
 *Formatting Support (currently only bold is supported)
 
