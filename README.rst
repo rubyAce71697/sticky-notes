@@ -24,6 +24,17 @@ Screenshots
 .. image:: screenshots/change_title.png
 .. image:: screenshots/delete_or_not.png
 
+Known Issues
+==============
+* Ony BOLD style works
+* formating is not stored i.e. text will be plain next time you open
+
+
+TODO:
+==========
+* Develop common window to show all the notes
+* show all the notes in app indicator menu
+
 
 =================
 WORK IN PROGRESS
