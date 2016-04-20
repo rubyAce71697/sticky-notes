@@ -704,7 +704,7 @@ class Application_Menu:
 
     def __init__(self):
         indicator = appindicator.Indicator.new("Stickies",
-                                               os.path.dirname(os.path.abspath(__file__)) +"/stickies.png",
+                                               "stickies",
                                                appindicator.IndicatorCategory.APPLICATION_STATUS)
         indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
         #indicator.set_icon

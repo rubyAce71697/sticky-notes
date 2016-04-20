@@ -16,45 +16,6 @@ Features
 * Change color of notes
 * Formatting Support (currently only bold is supported)
 
-
-Instructions
-==================
-
-Install (PyPI)
---------------
-::
-
- sudo pip install -i https://pypi.python.org/pypi sticky-notes
- 
- If icons are not working then use ::
-  sudo git-update-icon-cache /usr/share/icons/hicolor
-
-Uninstall
-----------
-::
- sudo pip uninstall sticky-notes
-
- (Remove Data)
- In Home Directory ::
-  rm -r .stickies-data
-  rm .stickies.cfg
-
-
- 
-Usage
-===================
-
-From terminal run::
-
- start-sticky-notes
-
-To run indicator in background ::
-
- nohup start-sticky-notes &
-
-
-
-
 Screenshots
 =============
 .. image:: screenshots/application_menu.png
@@ -73,7 +34,6 @@ TODO:
 ==========
 * Develop common window to show all the notes
 * show all the notes in app indicator menu
-* Add Application Icon in the Dash
 
 
 =================
