@@ -4,3 +4,4 @@
 *.glade~
 notes
 *.py~
+dist
