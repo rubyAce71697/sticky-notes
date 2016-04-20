@@ -30,14 +30,17 @@ Install (PyPI)
   sudo git-update-icon-cache /usr/share/icons/hicolor
 
 Uninstall
-----------
+------------
 ::
+ 
  sudo pip uninstall sticky-notes
 
- (Remove Data)
- In Home Directory ::
-  rm -r .stickies-data
-  rm .stickies.cfg
+
+(Remove Data)
+In Home Directory ::
+
+ rm -r .stickies-data
+ rm .stickies.cfg
 
 
  
