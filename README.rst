@@ -47,6 +47,9 @@ In Home Directory ::
 Usage
 ===================
 
+From Launcher run:
+ Sticky Notes
+
 From terminal run::
 
  start-sticky-notes
@@ -56,7 +59,9 @@ To run indicator in background ::
  nohup start-sticky-notes &
 
 
-
+Changelog
+==============
+* Added Launcher Icon 
 
 Screenshots
 =============
@@ -76,7 +81,7 @@ TODO:
 ==========
 * Develop common window to show all the notes
 * show all the notes in app indicator menu
-* Add Application Icon in the Dash
+
 
 
 =================
