@@ -1,0 +1,9 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Type=Application
+Name=Sticky Notes
+Comments=With Sticky Notes one can put notes on the desktop. Its design is inspired from "stickies for Mac"
+Exec=start-sticky-notes
+Icon=stickies
+Terminal=False
+Categories=Network,GTK;
