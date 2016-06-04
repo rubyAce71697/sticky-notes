@@ -38,6 +38,8 @@ class Revealer_Glade:
 
     no_of_notes = 0
     notes_list = []
+
+    
     def __init__(self,widget, path = None):
 
 
@@ -641,35 +643,7 @@ class Revealer_Glade:
         else:
             self.revealer.set_reveal_child(True)
     """
-def create_note(widget,note = None):
-    print note
-    if note is not None:
-        print "here"
 
-        Revealer_Glade(widget,note)
-    #GObject.idle_add(Revealer_Glade(note))
-    else:
-        Revealer_Glade(widget,path=None)
-
-
-def initialize_notes(menu):
-
-
-    logger.info("Initialising path-- " + home + "/.stickies-data/*.txt")
-
-    logger.debug(glob.glob(home + "/.stickies-data/*.txt"))
-    #print glob.glob(home + "/stickies-data/*.txt")
-    list = glob.glob(home + "/.stickies-data/*.txt")
-    print list
-    if list:
-        for note in list:
-            print note
-            create_note(menu,note)
-    else:
-        create_note(menu,None)
-    logger.info("Starting Gtk loop")
-    if menu is not None:
-        Gtk.main()
 
 
 
@@ -700,90 +674,7 @@ def quit_application(widget):
     Gtk.main_quit()
 
 
-class Application_Menu:
 
-    def __init__(self):
-        indicator = appindicator.Indicator.new("Stickies",
-                                               "stickies",
-                                               appindicator.IndicatorCategory.APPLICATION_STATUS)
-        indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
-        #indicator.set_icon
-        menu = Gtk.Menu()
-
-        add_item = Gtk.MenuItem("New Note")
-        add_item.connect("activate",create_note)
-
-        show_item = Gtk.MenuItem("Notes")
-        note_items = Gtk.Menu()
-        note_1 = Gtk.MenuItem("wll show all the notes here")
-        note_items.append(note_1)
-        show_item.set_submenu(note_items)
-
-
-        show_notes = Gtk.MenuItem("Show All")
-
-        show_notes.connect("activate",self.show_all_notes)
-        menu.append(show_notes)
-        show_notes.show()
-
-        hide_notes = Gtk.MenuItem("Hide All")
-        hide_notes.connect("activate",self.hide_all_notes)
-        menu.append(hide_notes)
-        hide_notes.show()
-
-
-
-        about_item = Gtk.MenuItem("About")
-        about_item.connect("activate",about_stickies)
-        quit_item = Gtk.MenuItem("Quit")
-        quit_item.connect("activate",quit_application)
-        menu.append(add_item)
-        menu.append(show_item)
-        menu.append(about_item)
-        menu.append(quit_item)
-
-        indicator.set_menu(menu)
-        add_item.show()
-        show_item.show()
-        note_1.show()
-        about_item.show()
-        quit_item.show()
-
-        initialize_notes(add_item)
-
-    def show_all_notes(self,widget):
-
-        if not Revealer_Glade.notes_list:
-            initialize_notes(None)
-        else:
-            for i in Revealer_Glade.notes_list:
-                i.window.show()
-                i.window.set_keep_above(True)
-                i.window.set_keep_above(False)
-
-    def hide_all_notes(selfself,widget):
-
-
-        for i in Revealer_Glade.notes_list:
-            i.save_sticky()
-            i.window.close()
-
-        Revealer_Glade.notes_list = []
-
-def run():
-    logger.debug("Running Srickies")
-    d = os.path.join(expanduser('~') +  "/.stickies-data")
-    print d
-    if not os.path.exists(d):
-        logger.debug("Creating .stickies-data in home directory")
-        os.makedirs(d)
-
-    Application_Menu()
-
-if __name__ == "__main__":
-
-    #initialize_notes(None)Application_Menu()
-    print ("use 'sticky_notes' to run ")
 
 
 #Gtk.main()

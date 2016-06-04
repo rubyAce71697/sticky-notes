@@ -7,3 +7,4 @@ Exec=start-sticky-notes
 Icon=stickies
 Terminal=False
 Categories=Network,GTK;
+X-GNOME-Autostart-enabled=true

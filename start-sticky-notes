@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-import sticky_notes.stickies
+import sticky_notes.application_menu
 
 
-sticky_notes.stickies.run()
+sticky_notes.application_menu.run()
