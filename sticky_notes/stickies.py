@@ -40,8 +40,9 @@ class Revealer_Glade:
     no_of_notes = 0
     notes_list = []
 
+
     
-    def __init__(self,widget, path = None):
+    def __init__(self,widget, application_menu_object, path = None):
 
 
         handlers = {
@@ -62,7 +63,7 @@ class Revealer_Glade:
         Revealer_Glade.notes_list.append(self)
         logger.debug(Revealer_Glade.notes_list)
         self.config = Configurations()
-
+        self.application_menu_object = application_menu_object
         self.configuration = ""
         self.always_on_top_active = False
         note_string = ""
@@ -469,9 +470,11 @@ class Revealer_Glade:
     def change_note_title(self,widget):
         text = self.get_text(self.window,"Enter the Title. ")
         if  len(text):
-            self.title = text
 
-            self.label.set_text(text)
+        	self.application_menu_object.change_the_title_of_note_in_menu(self.title if self.title else str(self.uuid), text)
+        	self.title = text
+        	self.label.set_text(text)
+
         else:
             self.title = ""
 
@@ -601,6 +604,8 @@ class Revealer_Glade:
             os.remove(self.path)
             self.window.close()
             Revealer_Glade.notes_list.remove(self)
+
+            self.application_menu_object.remove_deleted_note_from_menu( self.title if self.title else str(self.uuid))
 
         self.window.hide()
 
