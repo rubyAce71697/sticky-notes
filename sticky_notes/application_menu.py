@@ -23,7 +23,7 @@ import webbrowser
 
 """ learning logging"""
 import logging
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
 
 home = expanduser("~")
@@ -31,16 +31,23 @@ home = expanduser("~")
 
 class Application_Menu:
 
+    notes_uuid = []
+    notes_gtk_object = []
 
     def create_note(self,widget,note = None):
         print note
         if note is not None:
             print "here"
 
-            Revealer_Glade(widget,note)
-        #GObject.idle_add(Revealer_Glade(note))
+            note = Revealer_Glade(widget,note)
+
+            
+
         else:
-            Revealer_Glade(widget,path=None)
+            note = Revealer_Glade(widget,path=None)
+
+
+        self.add_notes_to_menu(note, widget.get_parent() )
 
     def __init__(self):
         indicator = appindicator.Indicator.new("Stickies",
@@ -55,8 +62,6 @@ class Application_Menu:
 
         show_item = Gtk.MenuItem("Notes")
         note_items = Gtk.Menu()
-        note_1 = Gtk.MenuItem("wll show all the notes here")
-        note_items.append(note_1)
         show_item.set_submenu(note_items)
 
 
@@ -85,13 +90,38 @@ class Application_Menu:
         indicator.set_menu(menu)
         create_item.show()
         show_item.show()
-        note_1.show()
         about_item.show()
         quit_item.show()
 
         self.initialize_notes(create_item)
 
+
+    def add_notes_to_menu(self, note, menu):
+        label = ""
+        print note
+        if note.title:
+            logger.debug("note.title is set")
+            label = note.title
+        else:
+            label = str(note.uuid)
+            logger.debug("title not set")
+
+
+
+        note_gtk_item =  Gtk.MenuItem(label)
+        note_gtk_item.connect("activate",self.note_clicked)
+        print(menu.get_children()[3].get_label())
+        menu.get_children()[3].get_submenu().append(note_gtk_item)
+        note_gtk_item.show();
+
     
+    def note_clicked(self,widget):
+
+        for i in Revealer_Glade.notes_list:
+
+            if str(i.uuid) == widget.get_label() or i.title == widget.get_label():
+                i.window.set_keep_above(True)
+                i.window.set_keep_above(False)
 
     
 
