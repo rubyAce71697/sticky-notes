@@ -9,6 +9,8 @@ Features
 ==========
 * Markdown Support
 * Links support (ctrl + left click opens link in default browser)
+* Show all your notes in App Indicator, giving access to note on one click.
+* Identifier in the App Inidicator is the tile of the note. If the title is not set for note, the either previous title of uuid for note is shown
 * Collapse/ Expand your notes 
 * Delete/ Hide individual notes
 * Hide All/ Show All notes at once
@@ -61,11 +63,18 @@ To run indicator in background ::
 
 Changelog
 ==============
+* Notes Can be access from Application Indicator
+* Under Notes Submenu, clicking on menuitems will show their respective notes
+* Identifier of Note in App Indicator is updated as soon as the it is updated for the note.
+* If the tile of tou note is not set then the old title/ uuid of the note is shown as Identifier in the App Indicator
+* Window position between "Hide All" and "Show All" actions is preserved now
 * Added Launcher Icon 
+
 
 Screenshots
 =============
 .. image:: screenshots/application_menu.png
+.. image:: screenshots/updated_menu.png
 .. image:: screenshots/collapse.png
 .. image:: screenshots/context_menu.png
 .. image:: screenshots/change_title.png
@@ -80,10 +89,6 @@ Known Issues
 TODO:
 ==========
 * Develop common window to show all the notes
-* show all the notes in app indicator menu
+* Update Setup.py to remove all the data during "pip uninstall"
 
 
-
-=================
-WORK IN PROGRESS
-=================
