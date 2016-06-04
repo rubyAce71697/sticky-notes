@@ -26,8 +26,9 @@ import webbrowser
 
 """ learning logging"""
 import logging
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
+logger.disabled = True
 
 home = expanduser("~")
 
@@ -66,6 +67,7 @@ class Revealer_Glade:
         self.always_on_top_active = False
         note_string = ""
         self.path = path
+        self.title = ""
         if self.path is None:
             print "self.path is none"
             #evealer_Glade.no_of_notes += 1
@@ -648,30 +650,7 @@ class Revealer_Glade:
 
 
 
-def about_stickies(widget):
-    dialog = Gtk.AboutDialog.new()
-    # fixes the "mapped without transient parent" warning
-    dialog.set_transient_for(widget.get_parent().get_parent())
 
-    dialog.set_program_name("Stickies")
-    dialog.add_credit_section("Authors:", ['Nishant Kukreja (github.com/rubyace71697)'])
-    dialog.set_license_type(Gtk.License.GPL_3_0)
-    dialog.set_website("https://github.com/rubyAce71697/sticky-notes")
-    dialog.set_website_label("Github Page")
-    dialog.set_comments("Utility for ubuntu (inspired from stickies for mac)")
-    dialog.set_logo_icon_name(os.path.dirname(os.path.abspath(__file__)) +"/stickies.png")
-    print os.path.dirname(os.path.abspath(__file__)) + "/stickies.png"
-
-    dialog.run()
-    dialog.destroy()
-
-
-def quit_application(widget):
-    for note in Revealer_Glade.notes_list:
-        note.save_sticky()
-
-
-    Gtk.main_quit()
 
 
 
