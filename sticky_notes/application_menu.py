@@ -25,6 +25,7 @@ import webbrowser
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
+logger.disablesd = True
 
 home = expanduser("~")
 
@@ -133,24 +134,37 @@ class Application_Menu:
 
     def note_clicked(self,widget):
 
+
         logger.debug(widget.get_label() + " was clicked + it will be shown now")
 
         for i in Revealer_Glade.notes_list:
 
             if str(i.uuid) == widget.get_label() or i.title == widget.get_label():
                 i.window.show()
+                i.move_window()
                 i.window.set_keep_above(True)
                 i.window.set_keep_above(False)
+
+
+
+
+    def read_backups(self):
+        
+        logger.info("Initialising path-- " + home + "/.stickies-data/*.txt")
+        logger.debug(glob.glob(home + "/.stickies-data/*.txt"))
+        #print glob.glob(home + "/stickies-data/*.txt")
+        list = glob.glob(home + "/.stickies-data/*.txt")
+        
+        return list
+
+    
+
 
     def initialize_notes(self):
 
 
-        logger.info("Initialising path-- " + home + "/.stickies-data/*.txt")
+        list = self.read_backups()
 
-        logger.debug(glob.glob(home + "/.stickies-data/*.txt"))
-        #print glob.glob(home + "/stickies-data/*.txt")
-        list = glob.glob(home + "/.stickies-data/*.txt")
-        print list
         if list:
             for note in list:
                 print note
@@ -167,7 +181,9 @@ class Application_Menu:
             self.initialize_notes()
         else:
             for i in Revealer_Glade.notes_list:
+                i.save_sticky()
                 i.window.show()
+                i.move_window()
                 i.window.set_keep_above(True)
                 i.window.set_keep_above(False)
 
@@ -176,9 +192,9 @@ class Application_Menu:
 
         for i in Revealer_Glade.notes_list:
             i.save_sticky()
-            i.window.close()
+            i.window.hide()
 
-        Revealer_Glade.notes_list = []
+        #Revealer_Glade.notes_list = []
 
     def about_stickies(self,widget):
         dialog = Gtk.AboutDialog.new()

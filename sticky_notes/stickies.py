@@ -28,7 +28,7 @@ import webbrowser
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disabled = True
+
 
 home = expanduser("~")
 
@@ -132,7 +132,7 @@ class Revealer_Glade:
             self.bg_color = Gdk.Color(self.configuration['color']['red'], self.configuration['color']['green'], self.configuration['color']['blue'])
             self.title = self.configuration['title']
             self.label.set_text(self.title)
-            self.window.move(self.configuration['x'],self.configuration['y'])
+            self.move_window()
             self.revealer.set_reveal_child(self.configuration['reveal'])
 
         else:
@@ -150,6 +150,10 @@ class Revealer_Glade:
         self.save_sticky()
 
         self.window.show_all()
+
+    def move_window(self):
+    	self.window.move(self.configuration['x'],self.configuration['y'])
+    	self.save_sticky()
 
     def text_changed(self,textbuffer):
         GObject.idle_add(self.check_for_urls)
@@ -467,7 +471,7 @@ class Revealer_Glade:
             return text
         else:
             return None
-            
+
     def change_note_title(self,widget):
         text = self.get_text(self.window,"Enter the Title. ")
         if  len(text):
@@ -547,6 +551,7 @@ class Revealer_Glade:
         else:
             self.window.begin_move_drag(event.button, event.x_root,
                                         event.y_root, event.get_time())
+           
 
 
     def on_textview2_motion_notify_event( self, widget, event):
@@ -615,6 +620,18 @@ class Revealer_Glade:
 
         startiter = self.textbuffer.get_start_iter()
         enditer = self.textbuffer.get_end_iter()
+
+
+
+
+        
+        self.configuration['height'],self.configuration['width'] = self.window.get_size()
+        self.configuration['x'],self.configuration['y'] = self.window.get_position()
+        self.configuration['reveal'] = self.revealer.get_reveal_child()
+        self.configuration['title'] = self.title
+        self.configuration['color']['red'] = self.bg_color.red
+        self.configuration['color']['green'] = self.bg_color.green
+        self.configuration['color']['blue'] = self.bg_color.blue
 
         preferences = {}
         preferences['color'] = {}
