@@ -467,6 +467,7 @@ class Revealer_Glade:
             return text
         else:
             return None
+            
     def change_note_title(self,widget):
         text = self.get_text(self.window,"Enter the Title. ")
         if  len(text):

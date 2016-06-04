@@ -68,13 +68,13 @@ class Application_Menu:
         show_notes = Gtk.MenuItem("Show All")
 
         show_notes.connect("activate",self.show_all_notes)
-        self.menu.append(show_notes)
-        show_notes.show()
+        
+        
 
         hide_notes = Gtk.MenuItem("Hide All")
         hide_notes.connect("activate",self.hide_all_notes)
-        self.menu.append(hide_notes)
-        hide_notes.show()
+        
+        
 
 
 
@@ -83,18 +83,22 @@ class Application_Menu:
         quit_item = Gtk.MenuItem("Quit")
         quit_item.connect("activate",self.quit_application)
         self.menu.append(create_item)
+        self.menu.append(Gtk.SeparatorMenuItem())
+        self.menu.append(show_notes)
+        self.menu.append(hide_notes)
+        self.menu.append(Gtk.SeparatorMenuItem())
         self.menu.append(show_item)
+        self.menu.append(Gtk.SeparatorMenuItem())
         self.menu.append(about_item)
         self.menu.append(quit_item)
 
         indicator.set_menu(self.menu)
-        create_item.show()
-        show_item.show()
-        about_item.show()
-        quit_item.show()
+
+
+        for i in self.menu.get_children():
+            i.show()
 
         self.initialize_notes()
-
 
     def add_notes_to_menu(self, note):
         label = ""
@@ -110,35 +114,33 @@ class Application_Menu:
 
         note_gtk_item =  Gtk.MenuItem(label)
         note_gtk_item.connect("activate",self.note_clicked)
-        print(self.menu.get_children()[3].get_label())
-        self.menu.get_children()[3].get_submenu().append(note_gtk_item)
+        print(self.menu.get_children()[5].get_label())
+        self.menu.get_children()[5].get_submenu().append(note_gtk_item)
         note_gtk_item.show();
 
     def remove_deleted_note_from_menu(self,title):
-        for i in self.menu.get_children()[3].get_submenu().get_children():
+        for i in self.menu.get_children()[5].get_submenu().get_children():
             if title == i.get_label():
-                self.menu.get_children()[3].get_submenu().remove(i)
+                self.menu.get_children()[5].get_submenu().remove(i)
                 break
 
     def change_the_title_of_note_in_menu(self,old_title,new_title):
 
-        for i in self.menu.get_children()[3].get_submenu().get_children():
+        for i in self.menu.get_children()[5].get_submenu().get_children():
 
             if old_title == i.get_label():
                 i.set_label(new_title)
 
-    
     def note_clicked(self,widget):
+
+        logger.debug(widget.get_label() + " was clicked + it will be shown now")
 
         for i in Revealer_Glade.notes_list:
 
             if str(i.uuid) == widget.get_label() or i.title == widget.get_label():
+                i.window.show()
                 i.window.set_keep_above(True)
                 i.window.set_keep_above(False)
-
-    
-
-
 
     def initialize_notes(self):
 
@@ -159,11 +161,10 @@ class Application_Menu:
         if self.menu is not None:
             Gtk.main()
 
-
     def show_all_notes(self,widget):
 
         if not Revealer_Glade.notes_list:
-            self.initialize_notes(None)
+            self.initialize_notes()
         else:
             for i in Revealer_Glade.notes_list:
                 i.window.show()
@@ -195,7 +196,6 @@ class Application_Menu:
 
         dialog.run()
         dialog.destroy()
-
 
     def quit_application(self,widget):
         for note in Revealer_Glade.notes_list:
