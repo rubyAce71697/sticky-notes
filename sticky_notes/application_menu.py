@@ -42,7 +42,7 @@ class Application_Menu:
 
             note = Revealer_Glade(widget,self,note)
 
-            
+
 
         else:
             note = Revealer_Glade(widget, self,path=None)
@@ -69,13 +69,13 @@ class Application_Menu:
         show_notes = Gtk.MenuItem("Show All")
 
         show_notes.connect("activate",self.show_all_notes)
-        
-        
+
+
 
         hide_notes = Gtk.MenuItem("Hide All")
         hide_notes.connect("activate",self.hide_all_notes)
-        
-        
+
+
 
 
 
@@ -100,6 +100,10 @@ class Application_Menu:
             i.show()
 
         self.initialize_notes()
+
+        logger.info("Starting Gtk loop")
+        if self.menu is not None:
+            Gtk.main()
 
     def add_notes_to_menu(self, note):
         label = ""
@@ -149,31 +153,28 @@ class Application_Menu:
 
 
     def read_backups(self):
-        
+
         logger.info("Initialising path-- " + home + "/.stickies-data/*.txt")
         logger.debug(glob.glob(home + "/.stickies-data/*.txt"))
         #print glob.glob(home + "/stickies-data/*.txt")
-        list = glob.glob(home + "/.stickies-data/*.txt")
-        
-        return list
+        lst = glob.glob(home + "/.stickies-data/*.txt")
 
-    
+        return lst
+
+
 
 
     def initialize_notes(self):
 
 
-        list = self.read_backups()
+        lst = self.read_backups()
 
-        if list:
-            for note in list:
+        if lst:
+            for note in lst:
                 print note
                 self.create_note(None,note)
-        else:
-            self.create_note(menu,None)
-        logger.info("Starting Gtk loop")
-        if self.menu is not None:
-            Gtk.main()
+        # else:
+        #     self.create_note(self.menu,None)
 
     def show_all_notes(self,widget):
 
@@ -224,7 +225,7 @@ class Application_Menu:
 
 
 
-  
+
 
 
 def run():

@@ -11,7 +11,7 @@ Features
 * Links support (ctrl + left click opens link in default browser)
 * Show all your notes in App Indicator, giving access to note on one click.
 * Identifier in the App Inidicator is the tile of the note. If the title is not set for note, the either previous title of uuid for note is shown
-* Collapse/ Expand your notes 
+* Collapse/ Expand your notes
 * Delete/ Hide individual notes
 * Hide All/ Show All notes at once
 * Set the title of match (default title: first 40 characters  of note - shown when note is collapsed)
@@ -27,14 +27,14 @@ Install (PyPI)
 ::
 
  sudo pip install -i https://pypi.python.org/pypi sticky-notes
- 
+
  If icons are not working then use ::
-  sudo git-update-icon-cache /usr/share/icons/hicolor
+  sudo gtk-update-icon-cache /usr/share/icons/hicolor
 
 Uninstall
 ------------
 ::
- 
+
  sudo pip uninstall sticky-notes
 
 
@@ -45,7 +45,7 @@ In Home Directory ::
  rm .stickies.cfg
 
 
- 
+
 Usage
 ===================
 
@@ -68,7 +68,7 @@ Changelog
 * Identifier of Note in App Indicator is updated as soon as the it is updated for the note.
 * If the tile of tou note is not set then the old title/ uuid of the note is shown as Identifier in the App Indicator
 * Window position between "Hide All" and "Show All" actions is preserved now
-* Added Launcher Icon 
+* Added Launcher Icon
 
 
 Screenshots
