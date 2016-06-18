@@ -1,4 +1,4 @@
-#!usr/bin/env python
+	 #!usr/bin/env python
 import sys
 import json
 import gi.repository
@@ -64,7 +64,7 @@ class Revealer_Glade:
         logger.debug(Revealer_Glade.notes_list)
         self.config = Configurations()
         self.application_menu_object = application_menu_object
-        self.configuration = ""
+        self.configuration = {}
         self.always_on_top_active = False
         note_string = ""
         self.path = path
@@ -624,7 +624,7 @@ class Revealer_Glade:
 
 
 
-        
+        self.configuration['color'] = {}
         self.configuration['height'],self.configuration['width'] = self.window.get_size()
         self.configuration['x'],self.configuration['y'] = self.window.get_position()
         self.configuration['reveal'] = self.revealer.get_reveal_child()
