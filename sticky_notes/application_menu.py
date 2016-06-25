@@ -1,6 +1,8 @@
 #!usr/bin/env python
 
 from stickies import Revealer_Glade
+
+from find import Find
 from gi.repository import Gtk,GObject,Gdk,GtkSource
 from gi.repository import Pango
 from gi.repository import AppIndicator3 as appindicator
@@ -25,13 +27,14 @@ import webbrowser
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disablesd = True
+logger.disabled = True
 
 home = expanduser("~")
 
 
 class Application_Menu:
 
+    find_var = None
     notes_uuid = []
     notes_gtk_object = []
 
@@ -60,7 +63,7 @@ class Application_Menu:
 
         create_item = Gtk.MenuItem("New Note")
         create_item.connect("activate",self.create_note)
-
+        find_item = Gtk.MenuItem("Find")
         show_item = Gtk.MenuItem("Notes")
         note_items = Gtk.Menu()
         show_item.set_submenu(note_items)
@@ -85,6 +88,10 @@ class Application_Menu:
         quit_item.connect("activate",self.quit_application)
         self.menu.append(create_item)
         self.menu.append(Gtk.SeparatorMenuItem())
+        self.menu.append(find_item)
+        find_item.connect("activate",self.find_operation)
+        self.menu.append(Gtk.SeparatorMenuItem())
+
         self.menu.append(show_notes)
         self.menu.append(hide_notes)
         self.menu.append(Gtk.SeparatorMenuItem())
@@ -113,11 +120,25 @@ class Application_Menu:
 
 
 
+
+
         note_gtk_item =  Gtk.MenuItem(label)
         note_gtk_item.connect("activate",self.note_clicked)
-        print(self.menu.get_children()[5].get_label())
-        self.menu.get_children()[5].get_submenu().append(note_gtk_item)
+        print(self.menu.get_children()[7].get_label())
+        self.menu.get_children()[7].get_submenu().append(note_gtk_item)
         note_gtk_item.show();
+
+
+    def find_operation(self,widget):
+
+        logger.debug(" FInd clicked, in find_operation()")
+        if(self.find_var is None):
+            logger.debug("find_var is None")
+            self.find_var = Find()
+
+        logger.debug(type(self.find_var))
+        self.find_var.show()
+
 
     def remove_deleted_note_from_menu(self,title):
         for i in self.menu.get_children()[5].get_submenu().get_children():

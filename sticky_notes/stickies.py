@@ -1,4 +1,4 @@
-	 #!usr/bin/env python
+#!usr/bin/env python
 import sys
 import json
 import gi.repository
@@ -24,11 +24,14 @@ from configuration import Configurations
 import re
 import webbrowser
 
+# for rendering the markup language
+from gi.repository import WebKit
+
 """ learning logging"""
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-
+logger.disabled = False
 
 home = expanduser("~")
 
@@ -69,17 +72,19 @@ class Revealer_Glade:
         note_string = ""
         self.path = path
         self.title = ""
+        self.markdown_view = WebKit.WebView()
+        self.markdown_toggle = 0
         if self.path is None:
-            print "self.path is none"
+            #print "self.path is none"
             #evealer_Glade.no_of_notes += 1
             self.uuid = uuid.uuid4()
             self.path = home + "/.stickies-data/" + str(self.uuid) +".txt"
-            print self.path
+            #print self.path
         else:
             self.uuid = self.path[-40:-4]
             logger.debug("uid is " +  self.uuid)
             with open(path,'r') as file_to_read:
-                print file_to_read
+                #print file_to_read
                 note_string = file_to_read.read()
 
             self.configuration = self.config.readConfigurations(str(self.uuid))
@@ -95,13 +100,13 @@ class Revealer_Glade:
         GObject.type_register(GtkSource.View)
         #self.builder.add_from_file( os.path.dirname(os.path.abspath(__file__)) + "/stickies.glade")
         d = os.path.abspath(os.path.join(os.path.dirname(__file__)))
-        print d
+        ##print d
         d = os.path.join(d,"stickies.glade")
-        print d
+        ##print d
         self.builder.add_from_file(d)
 
         self.window = self.builder.get_object("window1")
-        self.scrolledwindow = self.builder.get_object("scrolledwindow3")
+        self.scrolledwindow = self.builder.get_object("scrolledwindow1")
         self.revealer = self.builder.get_object("revealer2")
         self.textview = self.builder.get_object("textview2")
         self.colorbuttn = self.builder.get_object("colorbutton1")
@@ -152,8 +157,8 @@ class Revealer_Glade:
         self.window.show_all()
 
     def move_window(self):
-    	self.window.move(self.configuration['x'],self.configuration['y'])
-    	self.save_sticky()
+        self.window.move(self.configuration['x'],self.configuration['y'])
+        self.save_sticky()
 
     def text_changed(self,textbuffer):
         GObject.idle_add(self.check_for_urls)
@@ -222,15 +227,15 @@ class Revealer_Glade:
 
     def hyperlink_clicked(self,tag,textview,event,iter):
         #tag.handler_block_by_func(self.hyperlink_clicked)
-        print "---------------------------------------------------------------------------"
-        #print event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
-        print event.type
-        print "state is printing"
+        #print "---------------------------------------------------------------------------"
+        ##print event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
+        #print event.type
+        #print "state is printing"
         event.get_state()
-        print event.type == Gdk.EventType.BUTTON_RELEASE and event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
-        print event.type
-        print event.get_state()
-        print event.state
+        #print event.type == Gdk.EventType.BUTTON_RELEASE and event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.BUTTON1_MASK
+        #print event.type
+        #print event.get_state()
+        #print event.state
         if event.type == Gdk.EventType.BUTTON_RELEASE and event.get_state()[1] == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.MOD2_MASK| Gdk.ModifierType.BUTTON1_MASK :
             logger.debug("Link Left clicked")
             logger.debug(tag.url)
@@ -280,12 +285,12 @@ class Revealer_Glade:
         pass
 
     def on_colorbutton1_color_activated(self,widget):
-        print "it should bbe fired"
-        print self.colorbuttn.get_current_color()
-
+        #print "it should bbe fired"
+        #print self.colorbuttn.get_current_color()
+        pass 
     def on_colorbutton1_color_set(self,widget):
-        print "now it should work"
-        print widget.get_color()
+        #print "now it should work"
+        #print widget.get_color()
         self.window.modify_bg(Gtk.StateType.NORMAL,widget.get_color())
         self.textview.modify_bg(Gtk.StateType.NORMAL,widget.get_color())
 
@@ -302,7 +307,7 @@ class Revealer_Glade:
     
         logger.debug("Bold Clicked")
         
-        print tag_bold
+        #print tag_bold
     def underline_clicked(self,widget):
         if not self.tag_list  :
             tag_bold = self.textbuffer.create_tag("bold", weight=Pango.Weight.BOLD)
@@ -393,11 +398,13 @@ class Revealer_Glade:
         Italic = Gtk.MenuItem("Italic")
         Underline = Gtk.MenuItem("Underline")
         strikethrough = Gtk.MenuItem("Strikethrough")
+        markdown_compile = Gtk.MenuItem("MarkDown_Compile")
         menu.append(always_on_top)
         menu.append(bold)
         menu.append(Italic)
         menu.append(Underline)
         menu.append(strikethrough)
+        menu.append(markdown_compile)
         always_on_top.show()
         bold.show()
         Underline.show()
@@ -406,12 +413,14 @@ class Revealer_Glade:
 
         always_on_top.connect("activate",self.always_on_top_clicked)
         bold.connect("activate",self.bold_clicked)
+        markdown_compile.connect("activate", self.markdown_compile_clicked)
         #Underline.connect("activate",self.underline_clicked)
         #strikethrough.connect("activate",self.strikethrough_clicked)
         #Italic.connect("activate",self.strikethrough_clicked)
         change_title = Gtk.MenuItem("Change Title")
         menu.append(change_title)
         change_title.show()
+        markdown_compile.show()
 
         change_title.connect("activate",self.change_note_title)
 
@@ -446,6 +455,35 @@ class Revealer_Glade:
         #colors_menu.get_children()[-1].connect("activate",self.show_file_chooser)
         textview_colors.show()
 
+    def markdown_compile_clicked(self,widget):
+        """
+        with io.open(self.rst_file, 'rb') as fp:
+            data = publishrst.html_parts(unicode(fp.read()))['whole']
+        self.markdown_view.load_html_string(data, 'file:///')
+        
+        """
+
+        """
+        TODO:: Check Pocket 
+               Tag: RST to HTML for MarkDown 
+
+        """
+        logger.debug("MarkDown_Compile Ckicked")
+
+        if not self.markdown_toggle:
+            logger.debug("Setting the Markdown View")
+            self.markdown_view.open(self.path)
+            self.scrolledwindow.add(self.markdown_view)
+            self.scrolledwindow.remove(self.textview)
+        else:
+            logger.debug("Setting the GtkSourceView")
+            self.scrolledwindow.add(self.textview)
+            self.scrolledwindow.remove(self.markdown_view)
+
+        self.markdown_toggle = not self.markdown_toggle
+
+
+
     def get_text(self,parent, message, default=''):
         """
         Display a dialog with a text entry.
@@ -476,9 +514,9 @@ class Revealer_Glade:
         text = self.get_text(self.window,"Enter the Title. ")
         if  len(text):
 
-        	self.application_menu_object.change_the_title_of_note_in_menu(self.title if self.title else str(self.uuid), text)
-        	self.title = text
-        	self.label.set_text(text)
+            self.application_menu_object.change_the_title_of_note_in_menu(self.title if self.title else str(self.uuid), text)
+            self.title = text
+            self.label.set_text(text)
 
         else:
             self.title = ""
@@ -500,9 +538,9 @@ class Revealer_Glade:
             logger.info("Text is not selected")
 
     def on_eventbox1_button_press_event(self,widget,event):
-        print self.window.get_size()[1]
-        print "This event called"
-        print Gdk.Event
+        #print self.window.get_size()[1]
+        #print "This event called"
+        #print Gdk.Event
         if event.type == 5:
             if self.revealer.get_reveal_child():
                 self.revealer.set_reveal_child(False)
@@ -534,8 +572,8 @@ class Revealer_Glade:
                     self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
 
                 logger.debug(self.label.get_text())
-                print self.label.get_text()
-                print "contracted"
+                #print self.label.get_text()
+                #print "contracted"
                 self.close_label.hide()
                 self.toogle_label.hide()
             else:
@@ -565,7 +603,7 @@ class Revealer_Glade:
         window = widget.get_window(Gtk.TextWindowType.TEXT)
         for tag in widget.get_iter_at_location(x, y).get_tags():
             logger.debug(" in loop tag = " + tag.url)
-            print event.get_state()
+            #print event.get_state()
             if hasattr(tag, "url") and event.get_state() == Gdk.ModifierType.CONTROL_MASK | Gdk.ModifierType.MOD2_MASK:
                 logger.debug(" Cordinates have tag url")
                 window.set_cursor(Gdk.Cursor(cursor_type=Gdk.CursorType.HAND2))
@@ -595,7 +633,7 @@ class Revealer_Glade:
             self.revealer.set_reveal_child(True)
 
     def close_sticky(self,widget,event):
-        #print "error whille closing windwo"
+        ##print "error whille closing windwo"
 
 
 
