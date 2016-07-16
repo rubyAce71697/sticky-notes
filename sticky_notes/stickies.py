@@ -12,6 +12,8 @@ from os.path import expanduser
 import glob
 import os
 
+import docutils
+from docutils import core
 
 
 """ configuration for storing the settings like color, position for ch note according to the uuid """
@@ -468,11 +470,21 @@ class Revealer_Glade:
                Tag: RST to HTML for MarkDown 
 
         """
+        with open(self.path,'r') as file_to_read:
+            #print file_to_read
+            note_string = file_to_read.read()
+
+        note_string = docutils.core.publish_parts(note_string, writer_name='html')['html_body']
+
+        logger.debug(note_string)
         logger.debug("MarkDown_Compile Ckicked")
+
+
+
 
         if not self.markdown_toggle:
             logger.debug("Setting the Markdown View")
-            self.markdown_view.open(self.path)
+            self.markdown_view.open(note_string)
             self.scrolledwindow.add(self.markdown_view)
             self.scrolledwindow.remove(self.textview)
         else:
