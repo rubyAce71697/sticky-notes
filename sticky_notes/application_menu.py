@@ -130,6 +130,8 @@ class Application_Menu:
                 break
 
     def change_the_title_of_note_in_menu(self,old_title,new_title):
+	print "|||||||||||||||"*20
+	print "tile cchanged" + new_title;
 
         for i in self.menu.get_children()[5].get_submenu().get_children():
 
@@ -190,7 +192,7 @@ class Application_Menu:
 
     def hide_all_notes(self,widget):
 
-
+	
         for i in Revealer_Glade.notes_list:
             i.save_sticky()
             i.window.hide()

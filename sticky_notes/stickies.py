@@ -41,7 +41,7 @@ class Revealer_Glade:
     notes_list = []
 
 
-
+    
     def __init__(self,widget, application_menu_object, path = None):
 
 
@@ -145,7 +145,7 @@ class Revealer_Glade:
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
-
+        
 
         self.save_sticky()
 
@@ -248,7 +248,7 @@ class Revealer_Glade:
 
             webbrowser.open(url,new = 2,autoraise = 2)
 
-
+           
     def open_in_browser_activated(self,widget,url,tag):
 
         regex = re.compile(r"([0-9a-zA-Z]+://.*)")
@@ -357,8 +357,8 @@ class Revealer_Glade:
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
-
-
+            
+            
 
     def show_file_chooser(self,widget):
 
@@ -441,7 +441,7 @@ class Revealer_Glade:
         for menuitem in colors_menu.get_children()[:-2]:
             menuitem.show()
             menuitem.connect("activate",self.textview_color_changed)
-
+        
         #colors_menu.get_children()[-1].show()
         #colors_menu.get_children()[-1].connect("activate",self.show_file_chooser)
         textview_colors.show()
@@ -551,7 +551,7 @@ class Revealer_Glade:
         else:
             self.window.begin_move_drag(event.button, event.x_root,
                                         event.y_root, event.get_time())
-
+           
 
 
     def on_textview2_motion_notify_event( self, widget, event):
@@ -624,7 +624,7 @@ class Revealer_Glade:
 
 
 
-
+        
         self.configuration['height'],self.configuration['width'] = self.window.get_size()
         self.configuration['x'],self.configuration['y'] = self.window.get_position()
         self.configuration['reveal'] = self.revealer.get_reveal_child()
@@ -669,3 +669,16 @@ class Revealer_Glade:
         else:
             self.revealer.set_reveal_child(True)
     """
+
+
+
+
+
+
+
+
+
+
+
+#Gtk.main()
+    

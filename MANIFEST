@@ -6,6 +6,7 @@ start-sticky-notes.desktop
 icons/stickies.png
 icons/stickies_64x64.png
 sticky_notes/__init__.py
+sticky_notes/application_menu.py
 sticky_notes/configuration.py
 sticky_notes/stickies.py
 sticky_notes/./stickies.glade
