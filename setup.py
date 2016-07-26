@@ -15,7 +15,7 @@ if (sys.version_info[0]*10 + sys.version_info[1]) < 26:
 
 setup(
 	name             = "sticky-notes",
-	version          = "markdown-2.1.2",
+	version          = "markdown-2.1.3",
 	author           = "Nishant Kukreja",
 	author_email     = "kukreja34@gmail.com",
         maintainer       = "Nishant Kukreja",
