@@ -46,7 +46,7 @@ class Revealer_Glade:
     notes_list = []
 
 
-    
+
     def __init__(self,widget, application_menu_object, path = None):
 
 
@@ -152,7 +152,7 @@ class Revealer_Glade:
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
-        
+
 
         self.save_sticky()
 
@@ -255,7 +255,7 @@ class Revealer_Glade:
 
             webbrowser.open(url,new = 2,autoraise = 2)
 
-           
+
     def open_in_browser_activated(self,widget,url,tag):
 
         regex = re.compile(r"([0-9a-zA-Z]+://.*)")
@@ -289,7 +289,7 @@ class Revealer_Glade:
     def on_colorbutton1_color_activated(self,widget):
         #print "it should bbe fired"
         #print self.colorbuttn.get_current_color()
-        pass 
+        pass
     def on_colorbutton1_color_set(self,widget):
         #print "now it should work"
         #print widget.get_color()
@@ -305,10 +305,10 @@ class Revealer_Glade:
             self.tag_list.append(tag_underline)
             self.tag_list.append(tag_italic)
         if self.textbuffer.get_has_selection():
-            self.textbuffer.apply_tag(self.tag_list[0],self.textbuffer.get_selection_bounds()[0],self.textbuffer.get_selection_bounds()[1]) 
-    
+            self.textbuffer.apply_tag(self.tag_list[0],self.textbuffer.get_selection_bounds()[0],self.textbuffer.get_selection_bounds()[1])
+
         logger.debug("Bold Clicked")
-        
+
         #print tag_bold
     def underline_clicked(self,widget):
         if not self.tag_list  :
@@ -364,8 +364,8 @@ class Revealer_Glade:
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
-            
-            
+
+
 
     def show_file_chooser(self,widget):
 
@@ -382,7 +382,7 @@ class Revealer_Glade:
             pass
 
 
-        logger.debug(response)      
+        logger.debug(response)
         colorchooserdialog.destroy()
 
     def always_on_top_clicked(self,widget):
@@ -452,7 +452,7 @@ class Revealer_Glade:
         for menuitem in colors_menu.get_children()[:-2]:
             menuitem.show()
             menuitem.connect("activate",self.textview_color_changed)
-        
+
         #colors_menu.get_children()[-1].show()
         #colors_menu.get_children()[-1].connect("activate",self.show_file_chooser)
         textview_colors.show()
@@ -462,12 +462,12 @@ class Revealer_Glade:
         with io.open(self.rst_file, 'rb') as fp:
             data = publishrst.html_parts(unicode(fp.read()))['whole']
         self.markdown_view.load_html_string(data, 'file:///')
-        
+
         """
 
         """
-        TODO:: Check Pocket 
-               Tag: RST to HTML for MarkDown 
+        TODO:: Check Pocket
+               Tag: RST to HTML for MarkDown
 
         """
         with open(self.path,'r') as file_to_read:
@@ -475,22 +475,25 @@ class Revealer_Glade:
             note_string = file_to_read.read()
 
         note_string = docutils.core.publish_parts(note_string, writer_name='html')['html_body']
+        note_string = "<html><body>" + note_string + "</body></html>"
 
         logger.debug(note_string)
         logger.debug("MarkDown_Compile Ckicked")
 
 
 
-
+        self.markdown_view.show()
         if not self.markdown_toggle:
             logger.debug("Setting the Markdown View")
-            self.markdown_view.open(note_string)
-            self.scrolledwindow.add(self.markdown_view)
+            self.markdown_view.load_html_string(note_string, 'file:///')
             self.scrolledwindow.remove(self.textview)
+            self.scrolledwindow.add(self.markdown_view)
+
         else:
             logger.debug("Setting the GtkSourceView")
-            self.scrolledwindow.add(self.textview)
             self.scrolledwindow.remove(self.markdown_view)
+            self.scrolledwindow.add(self.textview)
+
 
         self.markdown_toggle = not self.markdown_toggle
 
@@ -601,7 +604,7 @@ class Revealer_Glade:
         else:
             self.window.begin_move_drag(event.button, event.x_root,
                                         event.y_root, event.get_time())
-           
+
 
 
     def on_textview2_motion_notify_event( self, widget, event):
@@ -730,4 +733,3 @@ class Revealer_Glade:
 
 
 #Gtk.main()
-    
