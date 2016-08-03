@@ -2,6 +2,7 @@
 import sys
 import json
 import gi.repository
+import pprint
 
 
 from gi.repository import Gtk,GObject,Gdk,GtkSource
@@ -33,7 +34,7 @@ from gi.repository import WebKit
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disabled = False
+logger.disabled = True
 
 home = expanduser("~")
 
@@ -480,7 +481,12 @@ class Revealer_Glade:
         logger.debug(note_string)
         logger.debug("MarkDown_Compile Ckicked")
 
-
+        print self.markdown_view.get_settings().__dict__
+        
+        """
+        for i  in self.markdown_view.get_settings():
+            print i
+        """
 
         self.markdown_view.show()
         if not self.markdown_toggle:
