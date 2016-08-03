@@ -27,7 +27,7 @@ import webbrowser
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disabled = True
+logger.disabled = False
 
 home = expanduser("~")
 
@@ -141,16 +141,31 @@ class Application_Menu:
 
 
     def remove_deleted_note_from_menu(self,title):
-        for i in self.menu.get_children()[5].get_submenu().get_children():
+        for i in self.menu.get_children()[7].get_submenu().get_children():
             if title == i.get_label():
-                self.menu.get_children()[5].get_submenu().remove(i)
+                self.menu.get_children()[7].get_submenu().remove(i)
                 break
 
     def change_the_title_of_note_in_menu(self,old_title,new_title):
-	print "|||||||||||||||"*20
-	print "tile cchanged" + new_title;
 
-        for i in self.menu.get_children()[5].get_submenu().get_children():
+    	print "|||||||||||||||"*20
+    	print "tile cchanged" + new_title
+
+        for i in self.menu.get_children():
+            logger.debug("in loop")
+
+            logger.debug(i.get_label())
+
+            if (i.get_submenu()):
+                logger.debug("Submenu is here")
+
+                for j in i.get_submenu().get_children():
+
+                    logger.debug("---->" +  j.get_label())
+
+
+
+        for i in self.menu.get_children()[7].get_submenu().get_children():
 
             if old_title == i.get_label():
                 i.set_label(new_title)
