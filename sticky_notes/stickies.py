@@ -34,7 +34,7 @@ from gi.repository import WebKit
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disabled = True
+logger.disabled = False
 
 home = expanduser("~")
 
