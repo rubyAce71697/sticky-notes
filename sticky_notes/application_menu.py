@@ -34,7 +34,7 @@ home = expanduser("~")
 
 class Application_Menu:
 
-    find_var = None
+    find_var = Find()
     notes_uuid = []
     notes_gtk_object = []
 
@@ -77,6 +77,12 @@ class Application_Menu:
 
         hide_notes = Gtk.MenuItem("Hide All")
         hide_notes.connect("activate",self.hide_all_notes)
+
+        expand_all = Gtk.MenuItem("Expand All")
+        #expand_all.connect("activate", self.expand_all_notes)
+
+        collapse_all = Gtk.MenuItem("Collapse All")
+        #collapse_all.connect("activate", self.collapse_all_notes)
         
         
 
@@ -96,6 +102,9 @@ class Application_Menu:
         self.menu.append(hide_notes)
         self.menu.append(Gtk.SeparatorMenuItem())
         self.menu.append(show_item)
+        self.menu.append(Gtk.SeparatorMenuItem())
+        self.menu.append(expand_all)
+        self.menu.append(collapse_all)
         self.menu.append(Gtk.SeparatorMenuItem())
         self.menu.append(about_item)
         self.menu.append(quit_item)
@@ -132,11 +141,10 @@ class Application_Menu:
     def find_operation(self,widget):
 
         logger.debug(" FInd clicked, in find_operation()")
-        if(self.find_var is None):
-            logger.debug("find_var is None")
-            self.find_var = Find()
+        
 
         logger.debug(type(self.find_var))
+
         self.find_var.show()
 
 
@@ -168,7 +176,7 @@ class Application_Menu:
         for i in self.menu.get_children()[7].get_submenu().get_children():
 
             if old_title == i.get_label():
-                i.set_label(new_title)
+                GObject.idle_add(i.set_label,new_title)
 
     def note_clicked(self,widget):
 
@@ -178,10 +186,10 @@ class Application_Menu:
         for i in Revealer_Glade.notes_list:
 
             if str(i.uuid) == widget.get_label() or i.title == widget.get_label():
-                i.window.show()
+                GObject.idle_add(i.window.show)
                 i.move_window()
-                i.window.set_keep_above(True)
-                i.window.set_keep_above(False)
+                GObject.idle_add(i.window.set_keep_above,True)
+                GObject.idle_add(i.window.set_keep_above,False)
 
 
 
@@ -220,18 +228,27 @@ class Application_Menu:
         else:
             for i in Revealer_Glade.notes_list:
                 i.save_sticky()
-                i.window.show()
+                GObject.idle_add(i.window.show)
                 i.move_window()
-                i.window.set_keep_above(True)
-                i.window.set_keep_above(False)
+                GObject.idle_add(i.window.set_keep_above,True)
+                GObject.idle_add(i.window.set_keep_above,False)
 
     def hide_all_notes(self,widget):
 
 	
         for i in Revealer_Glade.notes_list:
             i.save_sticky()
-            i.window.hide()
+            GObject.idle_add(i.window.hide)
 
+    """
+
+    TODO: Add expand_all_notes and collapse_all_notes functions
+
+    def expand_all_notes(self,widget):
+        for i in Revealer_Glade.notes_list:
+            i
+
+    """
         #Revealer_Glade.notes_list = []
 
     def about_stickies(self,widget):
