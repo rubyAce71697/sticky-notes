@@ -40,6 +40,8 @@ class Find:
     """
     def __init__(self):
 
+       
+
 
         logger.debug(" Initializing the FIND object")
         self.builder = Gtk.Builder()
@@ -48,8 +50,10 @@ class Find:
         d = os.path.join(d,"find.glade")
         #print d
         self.builder.add_from_file(d)
-        self.find_window = None
-        
+        self.find_window = self.builder.get_object("find_window")
+        self.__search_entry = self.builder.get_object('searchentry1')
+        self.find_window.set_can_focus(True)
+        self.find_window.connect('delete_event',self.hide)
 
         
 
@@ -57,16 +61,23 @@ class Find:
 
         logger.debug("Showing the FIND window")
 
-        if self.find_window is None:
-            self.find_window = self.builder.get_object("find_window")
+        logger.debug(self.find_window)
+        
+        GObject.idle_add(self.find_window.grab_focus)
+        GObject.idle_add(self.__search_entry.grab_focus)
+        GObject.idle_add(self.find_window.show)
+        GObject.idle_add(self.find_window.set_keep_above,True)
+        
 
-        self.find_window.show()
+        GObject.idle_add(self.find_window.set_keep_above,False)
        
 
 
-    def hide(self):
+    def hide(self,widget,event):
+        logger.debug("Hiding the get_object")
+        GObject.idle_add(widget.hide)
 
-        self.find_window.hide()
+        return True
 
 
 
