@@ -89,6 +89,8 @@ Known Issues
 TODO:
 ==========
 * Develop common window to show all the notes
-* Update Setup.py to remove all the data during "pip uninstall"
+* Implement Find All function to search in all the notes and current note
+* Implement expand_all and collapse_all functionality 
+* Implement self arrange functionality (Accoring to created date, color,sorted title(if set) )
 
 
