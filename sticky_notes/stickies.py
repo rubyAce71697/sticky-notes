@@ -34,7 +34,7 @@ from gi.repository import WebKit
 import logging
 logging.basicConfig(level = logging.CRITICAL)
 logger = logging.getLogger(__name__)
-logger.disabled = False
+logger.disabled = True
 
 home = expanduser("~")
 
@@ -119,6 +119,7 @@ class Revealer_Glade:
         self.textbuffer = self.textview.get_buffer()
 
         self.title = ""
+        self.color_text = ""
 
         language_manager = GtkSource.LanguageManager()
         #logger.debug(language_manager.get_available_languages())
@@ -137,16 +138,26 @@ class Revealer_Glade:
         self.window.hide()
 
         if  self.configuration:
+            logger.debug("CONFIGURATION EXISTS")
             self.bg_color = Gdk.Color(self.configuration['color']['red'], self.configuration['color']['green'], self.configuration['color']['blue'])
             self.title = self.configuration['title']
             self.label.set_text(self.title)
-            self.move_window()
-            self.revealer.set_reveal_child(self.configuration['reveal'])
 
+            self.revealer.set_reveal_child(self.configuration['reveal'])
+            self.color_text = self.configuration['color']['text']
+            logger.info("Color read from configuration: " + self.color_text)
+            self.move_window()
         else:
             self.bg_color = Gdk.Color(red=60909, green=54484, blue=0)
             self.title = ""
+            self.color_text = "yellow"
             self.label.set_text("")
+
+        """
+            checking if it resolves the issue
+        """
+
+
 
 
 
@@ -171,7 +182,7 @@ class Revealer_Glade:
         logger.info('IN CHECK_FOR_URLS')
         self.textbuffer.handler_block_by_func(self.text_changed)
         cursor_position = self.textbuffer.props.cursor_position
-        logger.debug(cursor_position)
+        #logger.debug(cursor_position)
         if len(self.tag_list) == 1:
             self.tag_list.append(self.textbuffer.create_tag("underline",weight=Pango.Weight.BOLD))
 
@@ -179,7 +190,7 @@ class Revealer_Glade:
         enditer = self.textbuffer.get_end_iter()
         text = ""
         text = self.textbuffer.get_text(startiter,enditer, include_hidden_chars = True)
-        logger.debug(text)
+        #logger.debug(text)
         self.textbuffer.delete(startiter,enditer)
 
         regex = re.compile(r"(([0-9a-zA-Z]+://\S+)|(www\.\S+))")
@@ -354,6 +365,9 @@ class Revealer_Glade:
 
     def textview_color_changed(self,widget):
         logger.debug(widget.get_label() + " clicked")
+        self.color_text = widget.get_label().lower()
+
+        logger.debug("Color changed to :" + self.color_text)
         if widget.get_label() == "Yellow":
             self.bg_color = Gdk.Color(red=64764, green=59881, blue=20303)
         elif widget.get_label() == "Blue":
@@ -361,7 +375,10 @@ class Revealer_Glade:
         elif widget.get_label() == 'Purple':
             self.bg_color = Gdk.Color(red=44461, green=32639, blue=43176)
         elif widget.get_label() == "Peach":
+
             self.bg_color = Gdk.Color(red=64764, green=44975, blue=15934)
+
+        self.application_menu_object.change_item_icon(self.title if self.title else str(self.uuid), self.color_text.strip())
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
@@ -482,7 +499,7 @@ class Revealer_Glade:
         logger.debug("MarkDown_Compile Ckicked")
 
         print self.markdown_view.get_settings().__dict__
-        
+
         """
         for i  in self.markdown_view.get_settings():
             print i
@@ -543,6 +560,8 @@ class Revealer_Glade:
             self.title = ""
 
         logger.debug(text)
+
+
 
 
 
@@ -677,17 +696,23 @@ class Revealer_Glade:
 
     def save_sticky(self):
 
+        logger.info("Inside ==============>   save_sticky ")
+
         startiter = self.textbuffer.get_start_iter()
         enditer = self.textbuffer.get_end_iter()
 
 
 
 
-        self.configuration['color'] = {}
+        #self.configuration['color'] = dict()
+        self.configuration = None
+        self.configuration = dict()
         self.configuration['height'],self.configuration['width'] = self.window.get_size()
         self.configuration['x'],self.configuration['y'] = self.window.get_position()
         self.configuration['reveal'] = self.revealer.get_reveal_child()
         self.configuration['title'] = self.title
+        self.configuration['color'] = {}
+        self.configuration['color']['text'] = self.color_text
         self.configuration['color']['red'] = self.bg_color.red
         self.configuration['color']['green'] = self.bg_color.green
         self.configuration['color']['blue'] = self.bg_color.blue
@@ -698,11 +723,13 @@ class Revealer_Glade:
         preferences['x'],preferences['y'] = self.window.get_position()
         preferences['reveal'] = self.revealer.get_reveal_child()
         preferences['title'] = self.title
+        preferences['color']['text'] = self.color_text
         preferences['color']['red'] = self.bg_color.red
         preferences['color']['green'] = self.bg_color.green
         preferences['color']['blue'] = self.bg_color.blue
         logger.debug("height : " + str(self.window.get_size()[1]))
         logger.debug("height : " + str(self.window.get_size()[0]))
+        logger.debug("color text: " + self.color_text)
         logger.debug("red : " + str(self.bg_color.red))
         logger.debug("green : " + str(self.bg_color.green))
         logger.debug("blue : " + str(self.bg_color.blue))
