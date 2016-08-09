@@ -45,7 +45,7 @@ class Application_Menu:
 
             note = Revealer_Glade(widget,self,note)
 
-            
+
 
         else:
             note = Revealer_Glade(widget, self,path=None)
@@ -72,8 +72,8 @@ class Application_Menu:
         show_notes = Gtk.MenuItem("Show All")
 
         show_notes.connect("activate",self.show_all_notes)
-        
-        
+
+
 
         hide_notes = Gtk.MenuItem("Hide All")
         hide_notes.connect("activate",self.hide_all_notes)
@@ -83,8 +83,8 @@ class Application_Menu:
 
         collapse_all = Gtk.MenuItem("Collapse All")
         #collapse_all.connect("activate", self.collapse_all_notes)
-        
-        
+
+
 
 
 
@@ -117,21 +117,35 @@ class Application_Menu:
 
         self.initialize_notes()
 
+    """
+        *add color icon
+        *Purple
+        *Blue
+        *Peach
+        *Yellow
+    """
     def add_notes_to_menu(self, note):
         label = ""
+        icon = ""
         print note
         if note.title:
             logger.debug("note.title is set")
             label = note.title
+
         else:
             label = str(note.uuid)
             logger.debug("title not set")
+        icon = note.color_text
+        logger.debug("This should be the icon: " +  icon)
 
 
 
 
 
-        note_gtk_item =  Gtk.MenuItem(label)
+        note_gtk_item =  Gtk.ImageMenuItem.new_with_label(label)
+        logger.debug(icon)
+        note_gtk_item.set_image(Gtk.Image.new_from_icon_name(icon.strip()  ,Gtk.IconSize.LARGE_TOOLBAR))
+        note_gtk_item.set_always_show_image(True)
         note_gtk_item.connect("activate",self.note_clicked)
         print(self.menu.get_children()[7].get_label())
         self.menu.get_children()[7].get_submenu().append(note_gtk_item)
@@ -141,7 +155,7 @@ class Application_Menu:
     def find_operation(self,widget):
 
         logger.debug(" FInd clicked, in find_operation()")
-        
+
 
         logger.debug(type(self.find_var))
 
@@ -178,6 +192,31 @@ class Application_Menu:
             if old_title == i.get_label():
                 GObject.idle_add(i.set_label,new_title)
 
+
+    def change_item_icon(self,title,icon):
+
+
+        for i in self.menu.get_children():
+            logger.debug("in loop")
+
+            logger.debug(i.get_label())
+
+            if (i.get_submenu()):
+                logger.debug("Submenu is here")
+
+                for j in i.get_submenu().get_children():
+
+                    logger.debug("---->" +  j.get_label())
+
+
+
+        for i in self.menu.get_children()[7].get_submenu().get_children():
+
+            if title == i.get_label():
+                GObject.idle_add(i.set_image,Gtk.Image.new_from_icon_name(icon, Gtk.IconSize.LARGE_TOOLBAR))
+
+                logger.debug("Icon changed to: ", icon)
+
     def note_clicked(self,widget):
 
 
@@ -195,15 +234,15 @@ class Application_Menu:
 
 
     def read_backups(self):
-        
+
         logger.info("Initialising path-- " + home + "/.stickies-data/*.txt")
         logger.debug(glob.glob(home + "/.stickies-data/*.txt"))
         #print glob.glob(home + "/stickies-data/*.txt")
         list = glob.glob(home + "/.stickies-data/*.txt")
-        
+
         return list
 
-    
+
 
 
     def initialize_notes(self):
@@ -216,7 +255,7 @@ class Application_Menu:
                 print note
                 self.create_note(None,note)
         else:
-            self.create_note(menu,None)
+            self.create_note(self.menu,None)
         logger.info("Starting Gtk loop")
         if self.menu is not None:
             Gtk.main()
@@ -235,7 +274,7 @@ class Application_Menu:
 
     def hide_all_notes(self,widget):
 
-	
+
         for i in Revealer_Glade.notes_list:
             i.save_sticky()
             GObject.idle_add(i.window.hide)
@@ -279,7 +318,7 @@ class Application_Menu:
 
 
 
-  
+
 
 
 def run():
