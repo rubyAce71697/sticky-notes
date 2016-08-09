@@ -3,8 +3,12 @@ README
 setup.py
 start-sticky-notes
 start-sticky-notes.desktop
+icons/blue.png
+icons/peach.png
+icons/purple.png
 icons/stickies.png
 icons/stickies_64x64.png
+icons/yellow.png
 sticky_notes/__init__.py
 sticky_notes/application_menu.py
 sticky_notes/configuration.py
