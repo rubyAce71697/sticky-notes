@@ -79,10 +79,10 @@ class Application_Menu:
         hide_notes.connect("activate",self.hide_all_notes)
 
         expand_all = Gtk.MenuItem("Expand All")
-        #expand_all.connect("activate", self.expand_all_notes)
+        expand_all.connect("activate", self.expand_all_notes)
 
         collapse_all = Gtk.MenuItem("Collapse All")
-        #collapse_all.connect("activate", self.collapse_all_notes)
+        collapse_all.connect("activate", self.collapse_all_notes)
 
 
 
@@ -282,14 +282,19 @@ class Application_Menu:
     """
 
     TODO: Add expand_all_notes and collapse_all_notes functions
+    """
 
     def expand_all_notes(self,widget):
         for i in Revealer_Glade.notes_list:
-            i
+            i.reveal_window()
 
-    """
-        #Revealer_Glade.notes_list = []
+    def collapse_all_notes(self,widget):
+        for i in Revealer_Glade.notes_list:
+            i.collapse_window()
 
+
+
+        
     def about_stickies(self,widget):
         dialog = Gtk.AboutDialog.new()
         # fixes the "mapped without transient parent" warning

@@ -583,52 +583,62 @@ class Revealer_Glade:
         #print Gdk.Event
         if event.type == 5:
             if self.revealer.get_reveal_child():
-                self.revealer.set_reveal_child(False)
-                logger.debug(self.window.get_size())
-
-                #self.window.set_size_request(self.window.get_size()[0],15)
-                #.window.set_size_request, -1, -1)
-                #self.window.resize(self.window.get_size()[0],15)
-
-                logger.info("hiding text view")
-                self.revealer.hide()
-
-                #self.textview.set_size_request(self.window.get_size()[0],0)
-                self.window.set_size_request(self.window.get_size()[0],15)
-                self.window.resize(self.window.get_size()[0],15)
-                no_of_lines = self.textbuffer.get_line_count()
-                no_of_chars = self.textbuffer.get_char_count()
-                startiter = self.textbuffer.get_start_iter()
-                enditer = self.textbuffer.get_end_iter()
-                logger.debug("Info about note hiding text view")
-                logger.debug(no_of_lines)
-                logger.debug(no_of_chars)
-
-                logger.debug("---------------------------------------------------------------------------------------")
-                logger.debug(self.title)
-
-                if self.title == "":
-                    logger.debug("checking title")
-                    self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
-
-                logger.debug(self.label.get_text())
-                #print self.label.get_text()
-                #print "contracted"
-                self.close_label.hide()
-                self.toogle_label.hide()
+                self.collapse_window()
             else:
-                self.revealer.show()
-                logger.info("revealing text view")
-
-                if self.title == "":
-                    self.label.set_text("")
-
-                self.revealer.set_reveal_child(True)
-                self.close_label.show()
-                self.toogle_label.show()
+                
+                self.reveal_window()
         else:
             self.window.begin_move_drag(event.button, event.x_root,
                                         event.y_root, event.get_time())
+
+    def reveal_window(self):
+        self.revealer.show()
+        logger.info("revealing text view")
+
+        if self.title == "":
+            self.label.set_text("")
+
+        self.revealer.set_reveal_child(True)
+        self.close_label.show()
+        self.toogle_label.show()
+
+    def collapse_window(self):
+        self.revealer.set_reveal_child(False)
+        logger.debug(self.window.get_size())
+
+        #self.window.set_size_request(self.window.get_size()[0],15)
+        #.window.set_size_request, -1, -1)
+        #self.window.resize(self.window.get_size()[0],15)
+
+        logger.info("hiding text view")
+        self.revealer.hide()
+
+        #self.textview.set_size_request(self.window.get_size()[0],0)
+        self.window.set_size_request(self.window.get_size()[0],15)
+        self.window.resize(self.window.get_size()[0],15)
+        no_of_lines = self.textbuffer.get_line_count()
+        no_of_chars = self.textbuffer.get_char_count()
+        startiter = self.textbuffer.get_start_iter()
+        enditer = self.textbuffer.get_end_iter()
+        logger.debug("Info about note hiding text view")
+        logger.debug(no_of_lines)
+        logger.debug(no_of_chars)
+
+        logger.debug("---------------------------------------------------------------------------------------")
+        logger.debug(self.title)
+
+        if self.title == "":
+            logger.debug("checking title")
+            self.label.set_text((self.textbuffer.get_text(startiter,enditer,include_hidden_chars=False)).split("\n")[0][:40])
+
+        logger.debug(self.label.get_text())
+        #print self.label.get_text()
+        #print "contracted"
+        self.close_label.hide()
+        self.toogle_label.hide()
+
+
+
 
 
 
