@@ -16,7 +16,9 @@ Features
 * Hide All/ Show All notes at once
 * Set the title of match (default title: first 40 characters  of note - shown when note is collapsed)
 * Change color of notes (Colours will also show in the indicator and will change once the colour of note is changed)
-* Formatting Support (currently only bold is supported)
+* Formatting Support (Markdown Supported)
+* Expand/ Collapse All notes
+
 
 
 Instructions
@@ -63,6 +65,7 @@ To run indicator in background ::
 
 Changelog
 ==============
+* Expand All/ Collapse All functionality implemented
 * Notes Can be access from Application Indicator
 * Under Notes Submenu, clicking on menuitems will show their respective notes
 * Identifier of Note in App Indicator is updated as soon as the it is updated for the note.
@@ -90,5 +93,4 @@ TODO:
 ==========
 * Develop common window to show all the notes
 * Implement Find All function to search in all the notes and current note
-* Implement expand_all and collapse_all functionality
 * Implement self arrange functionality (Accoring to created date, color,sorted title(if set) )
