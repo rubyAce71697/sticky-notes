@@ -64,6 +64,7 @@ class Application_Menu:
         create_item = Gtk.MenuItem("New Note")
         create_item.connect("activate",self.create_note)
         find_item = Gtk.MenuItem("Find")
+        find_item.set_sensitive(False)
         show_item = Gtk.MenuItem("Notes")
         note_items = Gtk.Menu()
         show_item.set_submenu(note_items)
@@ -294,7 +295,7 @@ class Application_Menu:
 
 
 
-        
+
     def about_stickies(self,widget):
         dialog = Gtk.AboutDialog.new()
         # fixes the "mapped without transient parent" warning
