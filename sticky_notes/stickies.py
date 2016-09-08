@@ -145,7 +145,9 @@ class Revealer_Glade:
 
             self.revealer.set_reveal_child(self.configuration['reveal'])
             self.color_text = self.configuration['color']['text']
-            logger.info("Color read from configuration: " + self.color_text)
+            if not self.color_text:
+                self.color_text = self.check_color_label_or_rbg(self.configuration['color'], 1)
+            logger.info("Color read from configuration: " + self.color_text if self.color_text else "Not present")
             self.move_window()
         else:
             self.bg_color = Gdk.Color(red=60909, green=54484, blue=0)
@@ -193,7 +195,7 @@ class Revealer_Glade:
         #logger.debug(text)
         self.textbuffer.delete(startiter,enditer)
 
-        regex = re.compile(r"(([0-9a-zA-Z]+://\S+)|(www\.\S+))")
+        regex = re.compile(r"(([0-9a-zA-Z]+://{,1}\S+)|(www\.\S+))")
         word_list = []
 
 
@@ -367,21 +369,41 @@ class Revealer_Glade:
         logger.debug(widget.get_label() + " clicked")
         self.color_text = widget.get_label().lower()
 
-        logger.debug("Color changed to :" + self.color_text)
-        if widget.get_label() == "Yellow":
-            self.bg_color = Gdk.Color(red=64764, green=59881, blue=20303)
-        elif widget.get_label() == "Blue":
-            self.bg_color = Gdk.Color(red=29298, green=40863, blue=53199)
-        elif widget.get_label() == 'Purple':
-            self.bg_color = Gdk.Color(red=44461, green=32639, blue=43176)
-        elif widget.get_label() == "Peach":
+        logger.debug("Color changed to :" + self.color_text if self.color_text else "Not available")
+        color = self.check_color_label_or_rbg(widget.get_label())
 
+        if color == "Yellow":
+            self.bg_color = Gdk.Color(red=64764, green=59881, blue=20303)
+        elif color == "Blue":
+            self.bg_color = Gdk.Color(red=29298, green=40863, blue=53199)
+        elif color == 'Purple':
+            self.bg_color = Gdk.Color(red=44461, green=32639, blue=43176)
+        elif color == "Peach":
             self.bg_color = Gdk.Color(red=64764, green=44975, blue=15934)
 
         self.application_menu_object.change_item_icon(self.title if self.title else str(self.uuid), self.color_text.strip())
 
         self.window.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
         self.textview.modify_bg(Gtk.StateType.NORMAL,self.bg_color)
+
+    def check_color_label_or_rbg(self, color , check_rbg = None):
+        if not check_rbg:
+            return color
+        else:
+
+            if color['red'] == 64764 and color['green'] == 59881 and color['blue'] == 20303:
+                return 'yellow'
+            elif color['red'] == 29298 and color['green'] == 40863 and color['blue'] == 53199:
+                return 'blue'
+            elif color['red'] == 44461 and color['green'] == 32639 and color['blue'] == 43176:
+                return 'purple'
+            elif color['red'] == 64764 and color['green'] == 44975 and color['blue'] == 15934:
+                return 'peach'
+            else:
+                return 'yellow'
+
+
+
 
 
 
@@ -585,7 +607,7 @@ class Revealer_Glade:
             if self.revealer.get_reveal_child():
                 self.collapse_window()
             else:
-                
+
                 self.reveal_window()
         else:
             self.window.begin_move_drag(event.button, event.x_root,
@@ -739,7 +761,7 @@ class Revealer_Glade:
         preferences['color']['blue'] = self.bg_color.blue
         logger.debug("height : " + str(self.window.get_size()[1]))
         logger.debug("height : " + str(self.window.get_size()[0]))
-        logger.debug("color text: " + self.color_text)
+        logger.debug("color text: " + self.color_text if self.color_text else "N/A")
         logger.debug("red : " + str(self.bg_color.red))
         logger.debug("green : " + str(self.bg_color.green))
         logger.debug("blue : " + str(self.bg_color.blue))

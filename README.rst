@@ -9,6 +9,7 @@ Features
 ==========
 * Markdown Support
 * Links support (ctrl + left click opens link in default browser)
+* Links to files are also supported (file:///home/Downloads etc). Links will open in default app.
 * Show all your notes in App Indicator, giving access to note on one click.
 * Identifier in the App Inidicator is the tile of the note. If the title is not set for note, the either previous title of uuid for note is shown
 * Collapse/ Expand your notes
@@ -66,6 +67,7 @@ To run indicator in background ::
 Changelog
 ==============
 * Expand All/ Collapse All functionality implemented
+* Links to files are supported now.
 * Notes Can be access from Application Indicator
 * Under Notes Submenu, clicking on menuitems will show their respective notes
 * Identifier of Note in App Indicator is updated as soon as the it is updated for the note.
@@ -83,14 +85,13 @@ Screenshots
 .. image:: screenshots/change_title.png
 .. image:: screenshots/delete_or_not.png
 
-Known Issues
-==============
-* Ony BOLD style works
-* formating is not stored i.e. text will be plain next time you open
-
+Known Issues:
+--------------
+* Compile View font size is fixed and will be larger according to window1
+* Web View Size canot be changed
+* Currently User Cannot go back from MarkDown View to text mode
 
 TODO:
 ==========
-* Develop common window to show all the notes
 * Implement Find All function to search in all the notes and current note
 * Implement self arrange functionality (Accoring to created date, color,sorted title(if set) )

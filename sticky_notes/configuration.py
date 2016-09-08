@@ -38,8 +38,13 @@ class Configurations:
 			preferences["height"] = self.config.getint(str(uid),'height')
 			preferences["width"] = self.config.getint(str(uid),'width')
 			preferences['color'] = {}
-			preferences['color']['text'] = self.config.get(str(uid),'text')
-			logger.debug(" Color read : " + preferences['color']['text'])
+
+			if self.config.has_option(str(uid),'text') :
+				preferences['color']['text'] = self.config.get(str(uid),'text')
+			else:
+				preferences['color']['text'] = None
+
+			logger.debug(" Color read : " + preferences['color']['text'] if preferences['color']['text'] else "Not present" )
 			preferences['color']['red'] = self.config.getint(str(uid),'red')
 			preferences['color']['green'] = self.config.getint(str(uid),'green')
 			preferences['color']['blue'] = self.config.getint(str(uid),'blue')
